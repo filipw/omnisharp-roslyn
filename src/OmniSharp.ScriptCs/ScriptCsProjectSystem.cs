@@ -18,18 +18,6 @@ namespace OmniSharp.ScriptCs
     [Export(typeof(IProjectSystem))]
     public class ScriptCsProjectSystem : IProjectSystem
     {
-        public static readonly string[] DefaultReferences =
-        {
-            "System",
-            "System.Core",
-            "System.Data",
-            "System.Data.DataSetExtensions",
-            "System.Xml",
-            "System.Xml.Linq",
-            "System.Net.Http",
-            "Microsoft.CSharp",
-        };
-
         public static readonly string[] DefaultNamespaces =
         {
             "System",
@@ -95,7 +83,7 @@ namespace OmniSharp.ScriptCs
                     var usings = new List<string>(DefaultNamespaces);
 
                     //default references
-                    ImportReferences(fs, references, DefaultReferences);
+                    //ImportReferences(fs, references, DefaultReferences);
 
                     //file usings
                     usings.AddRange(processResult.Namespaces);
