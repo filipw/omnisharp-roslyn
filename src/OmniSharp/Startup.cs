@@ -172,6 +172,7 @@ namespace OmniSharp
                 Assembly.Load(new AssemblyName("OmniSharp.Plugins")),
                 Assembly.Load(new AssemblyName("OmniSharp.Roslyn")),
                 Assembly.Load(new AssemblyName("OmniSharp.Roslyn.CSharp")),
+                Assembly.Load(new AssemblyName("OmniSharp.ScriptCs")),
                 Assembly.Load(new AssemblyName("OmniSharp.Stdio"))
             };
 
