@@ -24,11 +24,6 @@
         "System.IO.Compression": "4.1.0-rc3-24201-00",
         "dotnet-test-xunit": "1.0.0-rc3-000000-02"
       }
-    },
-    "net451": {
-      "dependencies": {
-        "xunit.runner.console": "2.1.0"
-      }
     }
   },
   "testRunner": "xunit"

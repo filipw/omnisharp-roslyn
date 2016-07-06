@@ -24,12 +24,6 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc3-21261"
   },
   "frameworks": {
-    "net451": {
-      "frameworkAssemblies": {
-        "System.ComponentModel.Composition": ""
-      },
-      "dependencies": {}
-    },
     "netstandard1.6": {
       "imports": [
         "dotnet5.6",

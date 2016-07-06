@@ -5,12 +5,6 @@
     "Microsoft.Extensions.Testing.Abstractions": "1.0.0-preview1-002702"
   },
   "frameworks": {
-    "net451": {
-      "frameworkAssemblies": {
-        "System.IO": "",
-        "System.Collections": ""
-      }
-    },
     "netstandard1.6": {
       "imports": [
         "dotnet5.6",

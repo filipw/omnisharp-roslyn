@@ -43,12 +43,12 @@ namespace OmniSharp.ScriptCs
         private readonly IMetadataFileReferenceCache _metadataFileReferenceCache;
 
         CSharpParseOptions CsxParseOptions { get; } = new CSharpParseOptions(LanguageVersion.CSharp6, DocumentationMode.Parse, SourceCodeKind.Script);
-        //IEnumerable<MetadataReference> DotNetBaseReferences { get; } = new[]
-        //    {
-        //        //MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),        // mscorlib
-        //        //MetadataReference.CreateFromFile(typeof(Enumerable).GetTypeInfo().Assembly.Location)    // systemCore
-        //       // MetadataReference.CreateFromFile(typeof(IScriptHost).Assembly.Location)                  // scriptcsContracts
-        //    };
+        IEnumerable<MetadataReference> DotNetBaseReferences { get; } = new MetadataReference[]
+            {
+                //MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),        // mscorlib
+                //MetadataReference.CreateFromFile(typeof(Enumerable).GetTypeInfo().Assembly.Location)    // systemCore
+               // MetadataReference.CreateFromFile(typeof(IScriptHost).Assembly.Location)                  // scriptcsContracts
+            };
 
         OmnisharpWorkspace Workspace { get; }
         IOmnisharpEnvironment Env { get; }
@@ -92,8 +92,8 @@ namespace OmniSharp.ScriptCs
             // Common usings and references
             //Context.CommonUsings.UnionWith(ScriptExecutor.DefaultNamespaces);
 
-            //Context.CommonReferences.UnionWith(DotNetBaseReferences);
-            Context.CommonReferences.UnionWith(scriptServices.MakeMetadataReferences(new[] { "System", "System.Core" }));       // ScriptCs defaults
+            Context.CommonReferences.UnionWith(DotNetBaseReferences);
+            //Context.CommonReferences.UnionWith(scriptServices.MakeMetadataReferences(new[] { "System", "System.Core" }));       // ScriptCs defaults
             Context.CommonReferences.UnionWith(scriptServices.MakeMetadataReferences(assemblyPaths));                        // nuget references
 
             // Process each .CSX file

@@ -9,21 +9,6 @@
     "Microsoft.CodeAnalysis": "1.3.0-beta1-20160602-01"
   },
   "frameworks": {
-    "net451": {
-      "frameworkAssemblies": {
-        "System.Runtime": "",
-        "System.Threading": "",
-        "System.Threading.Tasks": "",
-        "System.Collections": "",
-        "System.Globalization": "",
-        "System.Linq": "",
-        "System.Text.Encoding": "",
-        "System.Reflection": "",
-        "System.Security": "",
-        "System.Xml": "",
-        "System.IO": ""
-      }
-    },
     "netstandard1.3": {
       "imports": [
         "dotnet5.4",

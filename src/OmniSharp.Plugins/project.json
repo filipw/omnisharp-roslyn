@@ -13,11 +13,6 @@
     "Microsoft.CodeAnalysis.VisualBasic.Workspaces": "1.3.0-beta1-20160602-01"
   },
   "frameworks": {
-    "net451": {
-      "frameworkAssemblies": {
-        "System.Collections.Concurrent": ""
-      }
-    },
     "netstandard1.3": {
       "imports": [
         "dotnet5.4",

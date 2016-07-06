@@ -16,21 +16,6 @@
     "System.Reflection.Metadata": "1.3.0-rc3-24202-00"
   },
   "frameworks": {
-    "net451": {
-      "frameworkAssemblies": {
-        "System.Runtime": "",
-        "System.Threading": "",
-        "System.Threading.Tasks": "",
-        "System.Collections": "",
-        "System.Linq": "",
-        "System.Text.Encoding": "",
-        "System.Reflection": "",
-        "System.Security": "",
-        "System.Globalization": "",
-        "System.Xml": "",
-        "System.Xml.Linq": ""
-      }
-    },
     "netstandard1.3": {
       "imports": [
         "dotnet5.4",
