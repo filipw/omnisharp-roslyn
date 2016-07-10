@@ -1,5 +1,9 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Composition;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using OmniSharp.Services;
@@ -19,17 +23,27 @@ namespace OmniSharp.Roslyn.CSharp.Services
 
             var Features = Configuration.GetRoslynAssemblyFullName("Microsoft.CodeAnalysis.Features");
             var CSharpFeatures = Configuration.GetRoslynAssemblyFullName("Microsoft.CodeAnalysis.CSharp.Features");
-
-            var path = "C:\\omnisharp-ext\\RemoveRegionAnalyzerAndCodeFix.dll";
-            Assembly regions = null;
+            var extensionPaths = Directory.EnumerateFiles("C:\\omnisharp-ext", "*.dll", SearchOption.AllDirectories);
+            var extensionAssemblies = new List<Assembly>();
+            foreach (var extensionPath in extensionPaths)
+            {
+                try
+                {
+                    Assembly extensionAssembly = null;
 #if NET451
-            regions = Assembly.LoadFrom(path);
+                    extensionAssembly = Assembly.LoadFrom(extensionPath);
 #else
-            regions = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+                    extensionAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(extensionPath);
 #endif
+                    extensionAssemblies.Add(extensionAssembly);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+            }
 
-            builder.AddRange(loader.Load(Features, CSharpFeatures).Union(new[] { regions }));
-
+            builder.AddRange(loader.Load(Features, CSharpFeatures).Union(extensionAssemblies));
             this.Assemblies = builder.ToImmutable();
         }
     }
