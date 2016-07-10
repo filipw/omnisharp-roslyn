@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 using OmniSharp.Mef;
 using OmniSharp.Models;
+using OmniSharp.Services;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
 {
@@ -13,11 +16,13 @@ namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
     public class CodeCheckService : RequestHandler<CodeCheckRequest, QuickFixResponse>
     {
         private OmnisharpWorkspace _workspace;
+        private readonly ICodeActionProvider _codeActionProvider;
 
         [ImportingConstructor]
-        public CodeCheckService(OmnisharpWorkspace workspace)
+        public CodeCheckService(OmnisharpWorkspace workspace, ICodeActionProvider codeActionProvider)
         {
             _workspace = workspace;
+            _codeActionProvider = codeActionProvider;
         }
 
         public async Task<QuickFixResponse> Handle(CodeCheckRequest request)
@@ -31,7 +36,13 @@ namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
             foreach (var document in documents)
             {
                 var semanticModel = await document.GetSemanticModelAsync();
-                IEnumerable<Diagnostic> diagnostics = semanticModel.GetDiagnostics();
+                var syntaxTree = await document.GetSyntaxTreeAsync();
+
+                var compilation = semanticModel.Compilation.WithAnalyzers(_codeActionProvider.Analyzers);
+                //IEnumerable<Diagnostic> diagnostics = await compilation.GetAllDiagnosticsAsync();
+                IEnumerable<Diagnostic> diagnostics2 = await compilation.GetAnalyzerSyntaxDiagnosticsAsync(syntaxTree, CancellationToken.None);
+                IEnumerable<Diagnostic> diagnostics = await compilation.GetAllDiagnosticsAsync();
+                //IEnumerable<Diagnostic> diagnostics = semanticModel.GetDiagnostics();
 
                 //script files can have custom directives such as #load which will be deemed invalid by Roslyn
                 //we suppress the CS1024 diagnostic for script files for this reason. Roslyn will fix it later too, so this is temporary.

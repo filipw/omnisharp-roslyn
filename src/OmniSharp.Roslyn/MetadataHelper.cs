@@ -12,7 +12,10 @@ namespace OmniSharp.Roslyn
 {
     public class MetadataHelper
     {
+        #region foo
         private readonly IOmnisharpAssemblyLoader _loader;
+        #endregion
+        
         private readonly Lazy<Assembly> _featureAssembly;
         private readonly Lazy<Assembly> _csharpFeatureAssembly;
         private readonly Lazy<Assembly> _workspaceAssembly;

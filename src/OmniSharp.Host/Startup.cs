@@ -14,6 +14,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
+using OmniSharp.Host.Loader;
 using OmniSharp.Mef;
 using OmniSharp.Middleware;
 using OmniSharp.Options;

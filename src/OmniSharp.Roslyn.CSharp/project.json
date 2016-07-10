@@ -32,6 +32,7 @@
         "portable-net45+win8"
       ],
       "dependencies": {
+        "System.Runtime.Loader": "4.0.0",
         "NETStandard.Library": "1.6.0",
         "System.Threading.Tasks.Parallel": "4.0.1"
       }

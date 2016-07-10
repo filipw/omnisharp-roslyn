@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CodeRefactorings;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Models.V2;
@@ -26,7 +27,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
             }
 
             var refactoringContext = await GetRefactoringContext(originalDocument, request, actions);
-            var codeFixContext = await GetCodeFixContext(originalDocument, request, actions);
+            var codeFixContext = await GetCodeFixContext(originalDocument, request, actions, codeActionProviders.FirstOrDefault().Analyzers);
             await CollectRefactoringActions(codeActionProviders, logger, refactoringContext);
             await CollectCodeFixActions(codeActionProviders, logger, codeFixContext);
             actions.Reverse();
@@ -40,11 +41,14 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
             return new CodeRefactoringContext(originalDocument, location, (a) => actionsDestination.Add(a), CancellationToken.None);
         }
 
-        private static async Task<CodeFixContext?> GetCodeFixContext(Document originalDocument, ICodeActionRequest request, List<CodeAction> actionsDestination)
+        private static async Task<CodeFixContext?> GetCodeFixContext(Document originalDocument, ICodeActionRequest request, List<CodeAction> actionsDestination, ImmutableArray<DiagnosticAnalyzer> analyzers)
         {
             var sourceText = await originalDocument.GetTextAsync();
             var semanticModel = await originalDocument.GetSemanticModelAsync();
-            var diagnostics = semanticModel.GetDiagnostics();
+            var compilation = semanticModel.Compilation.WithAnalyzers(analyzers);
+
+            IEnumerable<Diagnostic> diagnostics = await compilation.GetAllDiagnosticsAsync();
+            //var diagnostics = semanticModel.GetDiagnostics();
             var span = GetTextSpan(request, sourceText);
 
             // Try to find exact match
@@ -244,7 +248,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
             {
                 foreach (var codeFix in provider.CodeFixes)
                 {
-                    if (_blacklist.Contains(codeFix.ToString()))
+                    if (_blacklist.Contains(codeFix.ToString()) || !fixContext.Value.Diagnostics.Any(x => codeFix.FixableDiagnosticIds.Contains(x.Id)))
                     {
                         continue;
                     }

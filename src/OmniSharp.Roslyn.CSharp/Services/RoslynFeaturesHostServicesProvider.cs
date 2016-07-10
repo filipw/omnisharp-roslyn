@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Composition;
+using System.Linq;
 using System.Reflection;
 using OmniSharp.Services;
 
@@ -19,7 +20,15 @@ namespace OmniSharp.Roslyn.CSharp.Services
             var Features = Configuration.GetRoslynAssemblyFullName("Microsoft.CodeAnalysis.Features");
             var CSharpFeatures = Configuration.GetRoslynAssemblyFullName("Microsoft.CodeAnalysis.CSharp.Features");
 
-            builder.AddRange(loader.Load(Features, CSharpFeatures));
+            var path = "C:\\omnisharp-ext\\RemoveRegionAnalyzerAndCodeFix.dll";
+            Assembly regions = null;
+#if NET451
+            regions = Assembly.LoadFrom(path);
+#else
+            regions = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+#endif
+
+            builder.AddRange(loader.Load(Features, CSharpFeatures).Union(new[] { regions }));
 
             this.Assemblies = builder.ToImmutable();
         }

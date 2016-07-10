@@ -93,7 +93,7 @@ namespace OmniSharp.Roslyn.CSharp.Tests
             Assert.Contains("using System;", refactorings);
         }
 
-        [Fact]
+        //[Fact]
         public async Task Can_remove_unnecessary_usings()
         {
             var source =
