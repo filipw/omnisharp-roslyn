@@ -7,6 +7,8 @@ namespace OmniSharp.Services
     public interface IAssemblyLoader
     {
         Assembly Load(AssemblyName name);
+
+        IEnumerable<Assembly> LoadAllFromFolder(string folderPath);
     }
 
     public static class IAssemblyLoaderExtensions
