@@ -7,6 +7,10 @@ using OmniSharp.Mef;
 using OmniSharp.Models;
 using OmniSharp.Models.CodeCheck;
 using OmniSharp.Models.Diagnostics;
+using OmniSharp.Services;
+using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
+using System.Threading;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
 {
@@ -14,11 +18,13 @@ namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
     public class CodeCheckService : IRequestHandler<CodeCheckRequest, QuickFixResponse>
     {
         private OmniSharpWorkspace _workspace;
+        private readonly ImmutableArray<DiagnosticAnalyzer> _analyzers;
 
         [ImportingConstructor]
-        public CodeCheckService(OmniSharpWorkspace workspace)
+        public CodeCheckService(OmniSharpWorkspace workspace, [ImportMany]IEnumerable<ICodeActionProvider> codeActionProviders)
         {
             _workspace = workspace;
+            _analyzers = codeActionProviders.SelectMany(x => x.Analyzers).Distinct().ToImmutableArray();
         }
 
         public async Task<QuickFixResponse> Handle(CodeCheckRequest request)
@@ -32,7 +38,8 @@ namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
             foreach (var document in documents)
             {
                 var semanticModel = await document.GetSemanticModelAsync();
-                IEnumerable<Diagnostic> diagnostics = semanticModel.GetDiagnostics();
+                var compilation = semanticModel.Compilation.WithAnalyzers(_analyzers);
+                var diagnostics = await compilation.GetAnalyzerSemanticDiagnosticsAsync(semanticModel, null, default(CancellationToken));
 
                 foreach (var quickFix in diagnostics.Select(MakeQuickFix))
                 {

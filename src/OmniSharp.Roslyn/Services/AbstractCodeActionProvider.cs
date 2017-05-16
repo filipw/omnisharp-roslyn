@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CodeRefactorings;
+using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace OmniSharp.Services
 {
@@ -13,7 +14,7 @@ namespace OmniSharp.Services
         public string ProviderName { get; }
         public ImmutableArray<CodeRefactoringProvider> Refactorings { get; }
         public ImmutableArray<CodeFixProvider> CodeFixes { get; }
-
+        public ImmutableArray<DiagnosticAnalyzer> Analyzers { get; }
         public ImmutableArray<Assembly> Assemblies { get; }
 
         protected AbstractCodeActionProvider(string providerName, ImmutableArray<Assembly> assemblies)
@@ -40,6 +41,12 @@ namespace OmniSharp.Services
                 .Select(type => CreateInstance<CodeFixProvider>(type))
                 .Where(instance => instance != null)
                 .ToImmutableArray();
+
+            this.Analyzers = types
+                 .Where(t => typeof(DiagnosticAnalyzer).IsAssignableFrom(t))
+                 .Select(type => CreateInstance<DiagnosticAnalyzer>(type))
+                 .Where(instance => instance != null)
+                 .ToImmutableArray();
         }
 
         private T CreateInstance<T>(Type type) where T : class

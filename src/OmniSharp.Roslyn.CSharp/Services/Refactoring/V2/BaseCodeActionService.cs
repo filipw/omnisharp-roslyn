@@ -16,6 +16,7 @@ using OmniSharp.Models.V2;
 using OmniSharp.Roslyn.CSharp.Services.CodeActions;
 using OmniSharp.Services;
 using OmniSharp.Utilities;
+using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
 {
@@ -62,7 +63,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
 
             var actions = new List<CodeAction>();
 
-            var codeFixContext = await GetCodeFixContext(originalDocument, request, actions);
+            var codeFixContext = await GetCodeFixContext(originalDocument, request, actions, Providers.SelectMany(x => x.Analyzers));
             if (codeFixContext != null)
             {
                 await CollectCodeFixActions(codeFixContext.Value);
@@ -93,12 +94,16 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
             return new CodeRefactoringContext(originalDocument, location, (a) => actionsDestination.Add(a), CancellationToken.None);
         }
 
-        private async Task<CodeFixContext?> GetCodeFixContext(Document originalDocument, ICodeActionRequest request, List<CodeAction> actionsDestination)
+        private async Task<CodeFixContext?> GetCodeFixContext(Document originalDocument, ICodeActionRequest request, List<CodeAction> actionsDestination, IEnumerable<DiagnosticAnalyzer> analyzers)
         {
             var sourceText = await originalDocument.GetTextAsync();
             var semanticModel = await originalDocument.GetSemanticModelAsync();
-            var diagnostics = semanticModel.GetDiagnostics();
+            var compilation = semanticModel.Compilation.WithAnalyzers(analyzers.ToImmutableArray());
+            
+            //var diagnostics = semanticModel.GetDiagnostics();
             var span = GetTextSpan(request, sourceText);
+
+            var diagnostics = await compilation.GetAnalyzerSemanticDiagnosticsAsync(semanticModel, span, default(CancellationToken));
 
             // Try to find exact match
             var pointDiagnostics = diagnostics.Where(d => d.Location.SourceSpan.Equals(span)).ToImmutableArray();
