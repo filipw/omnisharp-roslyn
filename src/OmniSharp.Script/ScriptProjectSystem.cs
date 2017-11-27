@@ -18,7 +18,7 @@ using OmniSharp.Roslyn.Utilities;
 using LogLevel = Dotnet.Script.DependencyModel.Logging.LogLevel;
 
 namespace OmniSharp.Script
-{   
+{
     [Export(typeof(IProjectSystem)), Shared]
     public class ScriptProjectSystem : IProjectSystem
     {
@@ -70,8 +70,10 @@ namespace OmniSharp.Script
 
         public void Initalize(IConfiguration configuration)
         {
-            var scriptHelper = new ScriptHelper(configuration);
+            var scriptOptions = new ScriptOptions();
+            ConfigurationBinder.Bind(configuration, scriptOptions);
 
+            var scriptHelper = new ScriptHelper(scriptOptions);
             _logger.LogInformation($"Detecting CSX files in '{_env.TargetDirectory}'.");
 
             // Nothing to do if there are no CSX files
@@ -92,14 +94,8 @@ namespace OmniSharp.Script
             inheritedCompileLibraries.AddRange(DependencyContext.Default.CompileLibraries.Where(x =>
                 x.Name.ToLowerInvariant().StartsWith("system.valuetuple")));
             
-            if (!bool.TryParse(configuration["enableScriptNuGetReferences"], out var enableScriptNuGetReferences))
-            {
-                enableScriptNuGetReferences = false;
-            }
-
             var commonReferences = new HashSet<MetadataReference>(MetadataReferenceEqualityComparer.Instance);
-
-            var compilationDependencies = TryGetCompilationDependencies(enableScriptNuGetReferences);
+            var compilationDependencies = TryGetCompilationDependencies(scriptOptions.EnableScriptNuGetReferences);
 
             // if we have no compilation dependencies
             // we will assume desktop framework
