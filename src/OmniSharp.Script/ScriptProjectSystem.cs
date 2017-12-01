@@ -93,7 +93,7 @@ namespace OmniSharp.Script
             // explicitly include System.ValueTuple
             inheritedCompileLibraries.AddRange(DependencyContext.Default.CompileLibraries.Where(x =>
                 x.Name.ToLowerInvariant().StartsWith("system.valuetuple")));
-            
+
             var commonReferences = new HashSet<MetadataReference>(MetadataReferenceEqualityComparer.Instance);
             var compilationDependencies = TryGetCompilationDependencies(scriptOptions.EnableScriptNuGetReferences);
 
@@ -101,6 +101,7 @@ namespace OmniSharp.Script
             // we will assume desktop framework
             // and add default CLR references
             // same applies for having a context that is not a .NET Core app
+
             if (!compilationDependencies.Any())
             {
                 _logger.LogInformation("Unable to find dependency context for CSX files. Will default to non-context usage (Desktop CLR scripts).");
@@ -136,7 +137,7 @@ namespace OmniSharp.Script
                     var csxFileName = Path.GetFileName(csxPath);
                     var project = scriptHelper.CreateProject(csxFileName, commonReferences);
 
-                    if (enableScriptNuGetReferences)
+                    if (scriptOptions.EnableScriptNuGetReferences)
                     {
                         var scriptMap = compilationDependencies.ToDictionary(rdt => rdt.Name, rdt => rdt.Scripts);
                         var options = project.CompilationOptions.WithSourceReferenceResolver(
