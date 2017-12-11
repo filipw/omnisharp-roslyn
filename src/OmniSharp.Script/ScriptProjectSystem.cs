@@ -23,17 +23,16 @@ namespace OmniSharp.Script
     public class ScriptProjectSystem : IProjectSystem
     {
         private const string CsxExtension = ".csx";
-        private readonly MetadataFileReferenceCache _metadataFileReferenceCache;
 
         // used for tracking purposes only
         private readonly HashSet<string> _assemblyReferences = new HashSet<string>();
-
         private readonly Dictionary<string, ProjectInfo> _projects;
         private readonly OmniSharpWorkspace _workspace;
         private readonly IOmniSharpEnvironment _env;
         private readonly ILogger _logger;
-
+        private readonly ILoggerFactory _loggerFactory;
         private readonly CompilationDependencyResolver _compilationDependencyResolver;
+        private readonly MetadataFileReferenceCache _metadataFileReferenceCache;
 
         [ImportingConstructor]
         public ScriptProjectSystem(OmniSharpWorkspace workspace, IOmniSharpEnvironment env, ILoggerFactory loggerFactory, 
@@ -42,6 +41,7 @@ namespace OmniSharp.Script
             _metadataFileReferenceCache = metadataFileReferenceCache;
             _workspace = workspace;
             _env = env;
+            _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<ScriptProjectSystem>();
             _projects = new Dictionary<string, ProjectInfo>();
 
@@ -73,7 +73,7 @@ namespace OmniSharp.Script
             var scriptOptions = new ScriptOptions();
             ConfigurationBinder.Bind(configuration, scriptOptions);
 
-            var scriptHelper = new ScriptHelper(scriptOptions, _env);
+            var scriptHelper = new ScriptHelper(scriptOptions, _env, _loggerFactory);
             _logger.LogInformation($"Detecting CSX files in '{_env.TargetDirectory}'.");
 
             // Nothing to do if there are no CSX files
@@ -101,7 +101,6 @@ namespace OmniSharp.Script
             // we will assume desktop framework
             // and add default CLR references
             // same applies for having a context that is not a .NET Core app
-
             if (!compilationDependencies.Any())
             {
                 _logger.LogInformation("Unable to find dependency context for CSX files. Will default to non-context usage (Desktop CLR scripts).");
