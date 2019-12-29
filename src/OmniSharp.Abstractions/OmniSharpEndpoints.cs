@@ -13,6 +13,7 @@ namespace OmniSharp
         public const string CodeFormat = "/codeformat";
         public const string Highlight = "/highlight";
         public const string AutoComplete = "/autocomplete";
+        public const string AutoCompleteResolve = "/autocomplete/resolve";
         public const string FindImplementations = "/findimplementations";
         public const string FindUsages = "/findusages";
         public const string GotoFile = "/gotofile";

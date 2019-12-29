@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace OmniSharp.Models.AutoComplete
 {
     public class AutoCompleteResponse
@@ -20,10 +22,12 @@ namespace OmniSharp.Models.AutoComplete
         public string Kind { get; set; }
         public bool IsSuggestionMode { get; set; }
         public bool Preselect { get; set; }
-
+        public int CompletionIndex { get; set; }
         public override bool Equals(object other)
         {
             var otherResponse = other as AutoCompleteResponse;
+            if (otherResponse == null) return false;
+
             return otherResponse.DisplayText == DisplayText
                 && otherResponse.Snippet == Snippet;
         }
