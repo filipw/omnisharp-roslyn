@@ -47,7 +47,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
             return omnisharpResponse.Changes.Select(change => new TextEdit()
             {
                 NewText = change.NewText,
-                Range = new Range(new Position(change.StartLine, change.StartColumn), new Position(change.EndLine, change.EndColumn))
+                Range = new Extensions.LanguageServer.Protocol.Models.Range(new Position(change.StartLine, change.StartColumn), new Position(change.EndLine, change.EndColumn))
             }).ToArray();
         }
     }

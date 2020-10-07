@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.TestPlatform.CoreUtilities.Extensions;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -37,9 +35,9 @@ namespace OmniSharp.LanguageServerProtocol
             };
         }
 
-        public static Range ToRange(this QuickFix location)
+        public static Extensions.LanguageServer.Protocol.Models.Range ToRange(this QuickFix location)
         {
-            return new Range()
+            return new Extensions.LanguageServer.Protocol.Models.Range()
             {
                 Start = new Position()
                 {
@@ -54,7 +52,7 @@ namespace OmniSharp.LanguageServerProtocol
             };
         }
 
-        public static OmniSharp.Models.V2.Range FromRange(Range range)
+        public static OmniSharp.Models.V2.Range FromRange(Extensions.LanguageServer.Protocol.Models.Range range)
         {
             return new OmniSharp.Models.V2.Range
             {
@@ -96,9 +94,9 @@ namespace OmniSharp.LanguageServerProtocol
         public static DocumentUri ToUri(string fileName) => DocumentUri.File(fileName);
         public static string FromUri(DocumentUri uri) => uri.GetFileSystemPath().Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
-        public static Range ToRange((int column, int line) location)
+        public static Extensions.LanguageServer.Protocol.Models.Range ToRange((int column, int line) location)
         {
-            return new Range()
+            return new Extensions.LanguageServer.Protocol.Models.Range()
             {
                 Start = ToPosition(location),
                 End = ToPosition(location)
@@ -115,18 +113,18 @@ namespace OmniSharp.LanguageServerProtocol
             return new Position(point.Line, point.Column);
         }
 
-        public static Range ToRange((int column, int line) start, (int column, int line) end)
+        public static Extensions.LanguageServer.Protocol.Models.Range ToRange((int column, int line) start, (int column, int line) end)
         {
-            return new Range()
+            return new Extensions.LanguageServer.Protocol.Models.Range()
             {
                 Start = new Position(start.line, start.column),
                 End = new Position(end.line, end.column)
             };
         }
 
-        public static Range ToRange(OmniSharp.Models.V2.Range range)
+        public static Extensions.LanguageServer.Protocol.Models.Range ToRange(OmniSharp.Models.V2.Range range)
         {
-            return new Range()
+            return new Extensions.LanguageServer.Protocol.Models.Range()
             {
                 Start = ToPosition(range.Start),
                 End = ToPosition(range.End)
