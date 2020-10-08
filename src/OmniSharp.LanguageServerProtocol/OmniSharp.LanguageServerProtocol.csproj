@@ -13,10 +13,13 @@
         <PackageReference Include="OmniSharp.Extensions.LanguageServer" />
     </ItemGroup>
 
+    <ItemGroup Condition = "'$(TargetFramework)' == 'net472'">
+        <ProjectReference Include="..\OmniSharp.DotNetTest\OmniSharp.DotNetTest.csproj" />
+    </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\OmniSharp.Host\OmniSharp.Host.csproj" />
         <ProjectReference Include="..\OmniSharp.Roslyn.CSharp\OmniSharp.Roslyn.CSharp.csproj" />
-        <ProjectReference Include="..\OmniSharp.DotNetTest\OmniSharp.DotNetTest.csproj" />
         <ProjectReference Include="..\OmniSharp.MSBuild\OmniSharp.MSBuild.csproj" />
         <ProjectReference Include="..\OmniSharp.Script\OmniSharp.Script.csproj" />
     </ItemGroup>

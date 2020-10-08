@@ -57,10 +57,10 @@
 
     <PackageReference Update="Newtonsoft.Json" Version="12.0.3" />
 
-    <PackageReference Update="NuGet.Packaging" Version="$(NuGetPackageVersion)" />
+    <!--<PackageReference Update="NuGet.Packaging" Version="$(NuGetPackageVersion)" />
     <PackageReference Update="NuGet.Packaging.Core" Version="$(NuGetPackageVersion)" />
     <PackageReference Update="NuGet.ProjectModel" Version="$(NuGetPackageVersion)" />
-    <PackageReference Update="NuGet.Versioning" Version="$(NuGetPackageVersion)" />
+    <PackageReference Update="NuGet.Versioning" Version="$(NuGetPackageVersion)" />-->
 
     <PackageReference Update="OmniSharp.Extensions.LanguageServer" Version="0.18.0-beta0081" />
     <PackageReference Update="OmniSharp.Extensions.LanguageProtocol.Testing" Version="0.18.0-beta0081" />

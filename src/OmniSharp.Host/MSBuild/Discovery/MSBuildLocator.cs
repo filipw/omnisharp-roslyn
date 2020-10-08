@@ -44,9 +44,9 @@ namespace OmniSharp.MSBuild.Discovery
         public static MSBuildLocator CreateDefault(ILoggerFactory loggerFactory, IAssemblyLoader assemblyLoader, IConfiguration msbuildConfiguration)
             => new MSBuildLocator(loggerFactory, assemblyLoader,
                 ImmutableArray.Create<MSBuildInstanceProvider>(
-                    new DevConsoleInstanceProvider(loggerFactory),
-                    new VisualStudioInstanceProvider(loggerFactory),
-                    new MonoInstanceProvider(loggerFactory),
+                    //new DevConsoleInstanceProvider(loggerFactory),
+                    //new VisualStudioInstanceProvider(loggerFactory),
+                    //new MonoInstanceProvider(loggerFactory),
                     new StandAloneInstanceProvider(loggerFactory),
                     new UserOverrideInstanceProvider(loggerFactory, msbuildConfiguration)));
 
